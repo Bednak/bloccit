@@ -36,7 +36,7 @@ describe("routes : static", () => {
 
       request.get(base + 'about', (err, res, body) => {
         expect(res.statusCode).toBe(200);
-        expect(body).toContain("About us");
+        expect(body).toContain("About Us");
         done();
       });
     });
