@@ -51,13 +51,7 @@ describe("routes : topics", () => {
     });
   });
 
-  describe("GET /topics", () => { /* suite implementation */ });
-  describe("GET /topics/new", () => { /* suite implementation */ });
-  describe("POST /topics/create", () => { /* suite implementation */ });
-  describe("GET /topics/:id", () => { /* suite implementation */ });
-  describe("POST /topics/:id/destroy", () => { /* suite implementation */ });
-  describe("GET /topics/:id/edit", () => { /* suite implementation */ });
-  describe("POST /topics/:id/update", () => { /* suite implementation */ });
+
 })
 
 describe("member user performing CRUD actions for Topic", () => {
@@ -75,13 +69,6 @@ describe("member user performing CRUD actions for Topic", () => {
   );
 });
 
-describe("GET /topics", () => { /* suite implementation */ });
-describe("GET /topics/new", () => { /* suite implementation */ });
-describe("POST /topics/create", () => { /* suite implementation */ });
-describe("GET /topics/:id", () => { /* suite implementation */ });
-describe("POST /topics/:id/destroy", () => { /* suite implementation */ });
-describe("GET /topics/:id/edit", () => { /* suite implementation */ });
-describe("POST /topics/:id/update", () => { /* suite implementation */ });
 });
 
 describe("GET /topics", () => {
@@ -207,7 +194,7 @@ describe("POST /topics/:id/update", () => {
     const options = {
       url: `${base}${this.topic.id}/update`,
       form: {
-        title: "JavaScript Frameworks",
+        title: "JS Frameworks",
         description: "There are a lot of them"
       }
     };
@@ -219,7 +206,7 @@ describe("POST /topics/:id/update", () => {
           where: { id: this.topic.id }
         })
         .then((topic) => {
-          expect(topic.title).toBe("JavaScript Frameworks");
+          expect(topic.title).toBe("JS Frameworks");
           done();
         });
       });
