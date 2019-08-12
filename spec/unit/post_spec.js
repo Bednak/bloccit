@@ -2,6 +2,7 @@ const sequelize = require("../../src/db/models/index").sequelize;
 const Topic = require("../../src/db/models").Topic;
 const Post = require("../../src/db/models").Post;
 const User = require("../../src/db/models").User;
+const Vote = require("../../src/db/models").Vote;
 
 describe("Post", () => {
 
@@ -150,4 +151,62 @@ describe("Post", () => {
       });
     });
   });
+
+  describe("#getPoints()", () => {
+    it("should return total points", (done) => {
+      this.post.votes = [];
+
+      Vote.create({
+        value: 1,
+        postId: this.post.id,
+        userId: this.user.id
+      })
+      .then((vote) => {
+        this.post.votes.push(vote);
+
+        expect(this.post.getPoints()).toBe(1);
+      })
+      .then(() => {
+        User.create({
+          email: "starman2@tesla.com",
+          password: "Trekkie4lyfe"
+        })
+        .then((user) => {
+          Vote.create({
+            value: 1,
+            postId: this.post.id,
+            userId: user.id
+          })
+          .then((vote) => {
+            this.post.votes.push(vote);
+
+            expect(this.post.getPoints()).toBe(2);
+          })
+          .then(() => {
+            User.create({
+              email: "starman3@tesla.com",
+              password: "Trekkie4lyfe"
+            })
+            .then((user) => {
+              Vote.create({
+                value: -1,
+                postId: this.post.id,
+                userId: user.id
+              })
+              .then((vote) => {
+                this.post.votes.push(vote);
+                expect(this.post.getPoints()).toBe(1);
+                done();
+              });
+            });
+          });
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        done();
+      });
+    });
+  });
+
 });
