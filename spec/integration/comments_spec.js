@@ -208,5 +208,94 @@ describe("routes : comments", () => {
 
   }); //end context for signed in user
 
+  describe("different user attempting to perform CRUD actions for Comment", () => {
+
+    beforeEach((done) => {
+      User.create({
+        email: "test@test.com",
+        password: "password",
+        role: "member"
+      })
+      .then((user) => {
+        request.get({
+          url: "http://localhost:3000/auth/fake",
+          form: {
+            role: "member",
+            userId: user.id,
+            email: user.email
+          }
+        },
+        (err, res, body) => {
+          done();
+        }
+      );
+    });
+  });
+
+  describe("POST /topics/:topicId/posts/:postId/comments/:id/destroy", () => {
+
+    it("should not delete the original comment with the original associated ID", (done) => {
+      Comment.all()
+      .then((comments) => {
+        const commentCountBeforeDelete = comments.length;
+        expect(commentCountBeforeDelete).toBe(1);
+        request.post(`${base}${this.topic.id}/posts/${this.post.id}/comments/${this.comment.id}/destroy`, (err, res, body) => {
+          expect(res.statusCode).toBe(401);
+          Comment.all()
+          .then((comments) => {
+            expect(err).toBeNull();
+            expect(comments.length).toBe(commentCountBeforeDelete);
+            done();
+          });
+        });
+      });
+    });
+  });
+});
+
+describe("admin user attempting to perform CRUD actions for Comment", () => {
+
+  beforeEach((done) => {
+    User.create({
+      email: "test@test.com",
+      password: "password",
+      role: "admin"
+    })
+    .then((user) => {
+      request.get({
+        url: "http://localhost:3000/auth/fake",
+        form: {
+          role: user.role,
+          userId: user.id,
+          email: user.email
+        }
+      },
+      (err, res, body) => {
+        done();
+      }
+    );
+  });
+});
+
+describe("POST /topics/:topicId/posts/:postId/comments/:id/destroy", () => {
+  
+  it("should delete the original comment with the original associated ID", (done) => {
+    Comment.all()
+    .then((comments) => {
+      const commentCountBeforeDelete = comments.length;
+      expect(commentCountBeforeDelete).toBe(1);
+      request.post(`${base}${this.topic.id}/posts/${this.post.id}/comments/${this.comment.id}/destroy`, (err, res, body) => {
+        expect(res.statusCode).toBe(302);
+        Comment.all()
+        .then((comments) => {
+          expect(err).toBeNull();
+          expect(comments.length).toBe(commentCountBeforeDelete - 1);
+          done();
+        });
+      });
+    });
+  });
+});
+});
 
 });
