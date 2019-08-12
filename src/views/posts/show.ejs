@@ -10,33 +10,39 @@
 
     <% include ../static/partials/messages.ejs %>
 
-    <h1><%= post.title %></h1>
-    <a href="/topics/<%= post.topicId %>/posts/<%= post.id %>/edit" class="btn btn-warning">Edit</a>
-    <form style="display:initial" action="/topics/<%= post.topicId %>/posts/<%= post.id %>/destroy" method="post">
-      <button type="submit" class="btn btn-danger">Delete</button>
-    </form>
-
-    <p><%= post.body %></p>
-
-    <section id="comment-form">
-
+    <div style="display: flex; align-items:center;">
       <% if(currentUser) { %>
-        <% include ../comments/new.ejs %>
+        <% include ../votes/voting.ejs %>
         <% } %>
-      </section>
 
-      <section id="comment-list">
-        <% if(post.comments) { %>
-          <% post.comments.forEach((comment) => { %>
+        <h1><%= post.title %></h1>
+      </div>
+      <a href="/topics/<%= post.topicId %>/posts/<%= post.id %>/edit" class="btn btn-warning">Edit</a>
+      <form style="display:initial" action="/topics/<%= post.topicId %>/posts/<%= post.id %>/destroy" method="post">
+        <button type="submit" class="btn btn-danger">Delete</button>
+      </form>
 
-            <%- include("../comments/show.ejs", {comment}) %>
-            <% }) %>
-            <% } %>
-          </section>
+      <p><%= post.body %></p>
 
-        </main>
+      <section id="comment-form">
 
-        <% include ../static/partials/baseScripts.ejs %>
+        <% if(currentUser) { %>
+          <% include ../comments/new.ejs %>
+          <% } %>
+        </section>
 
-      </body>
-      </html>
+        <section id="comment-list">
+          <% if(post.comments) { %>
+            <% post.comments.forEach((comment) => { %>
+
+              <%- include("../comments/show.ejs", {comment}) %>
+              <% }) %>
+              <% } %>
+            </section>
+
+          </main>
+
+          <% include ../static/partials/baseScripts.ejs %>
+
+        </body>
+        </html>
