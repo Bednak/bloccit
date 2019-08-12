@@ -40,7 +40,7 @@ module.exports = {
   },
 
   validateUsers(req, res, next) {
-    
+
      if(req.method === "POST") {
 
        req.checkBody("email", "must be valid").isEmail();
@@ -56,8 +56,21 @@ module.exports = {
      } else {
        return next();
      }
-   }
+   },
 
+   validateComments(req, res, next) {
+    if(req.method === "POST") {
+      req.checkBody("body", "must not be empty"). notEmpty();
+    }
 
+    const errors = req.validationErrors();
+
+    if (errors) {
+      req.flash("error", errors);
+      return res.redirect(req.headers.referer);
+    } else {
+      return next()
+    }
+  }
 
 }

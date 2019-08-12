@@ -50,8 +50,16 @@ module.exports = {
       if(err){
 
         res.redirect(303, `/topics/${req.params.topicId}/posts/${req.params.id}`)
+
       } else {
-        res.redirect(303, `/topics/${req.params.topicId}`)
+
+        const authorized = new Authorizer(req.user, post).destroy();
+        if(authorized){
+          res.redirect(303, `/topics/${req.params.topicId}`);
+        } else {
+          req.flash("notice", "You are not authorized to do that.");
+          res.redirect(`/topics/${req.params.topicId}/posts/${req.params.id}`);
+        }
       }
     });
   },
