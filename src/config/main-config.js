@@ -17,7 +17,7 @@ module.exports = {
       secret: process.env.cookieSecret,
       resave: false,
       saveUninitialized: false,
-      cookie: { maxAge: 1.21e+9 } //set cookie to expire in 14 days
+      cookie: { maxAge: 1.21e9 } //set cookie to expire in 14 days
     }));
     app.use(flash());
     passportConfig.init(app);
