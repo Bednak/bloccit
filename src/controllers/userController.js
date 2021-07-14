@@ -52,7 +52,7 @@ module.exports = {
   },
 
   show(req, res, next){
-   
+
     userQueries.getUser(req.params.id, (err, result) => {
 
       if(err || result.user === undefined){
